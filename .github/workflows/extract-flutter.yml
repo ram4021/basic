@@ -31,8 +31,9 @@ jobs:
           fi
           test -f "$ROOT/pubspec.yaml"
 
-          # Copy everything from the project root directly into this repository.
-          cp -a "$ROOT"/. .
+          # Copy the project root directly into the repository. Keep the
+          # repository's own workflow files so the GitHub App can push safely.
+          rsync -a --exclude='.github/workflows/' "$ROOT"/ ./
           rm -f "$ZIP"
 
       - name: Commit extracted project
