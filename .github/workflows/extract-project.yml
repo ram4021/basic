@@ -25,18 +25,14 @@ jobs:
           mkdir -p /tmp/flutter-project
           unzip -q "$ZIP" -d /tmp/flutter-project
 
-          # Find the actual Flutter project root by locating pubspec.yaml.
           PUBSPEC="$(find /tmp/flutter-project -type f -name pubspec.yaml | head -n 1)"
           test -n "$PUBSPEC"
           ROOT_DIR="$(dirname "$PUBSPEC")"
           echo "Flutter project root: $ROOT_DIR"
 
-          # Put EVERYTHING inside the Flutter project root directly in this repo.
+          # Put every file/folder inside the Flutter project directly at repo root.
           cp -a "$ROOT_DIR"/. ./
-
-          # Remove the uploaded archive and this one-time extraction workflow.
           rm -f "$ZIP"
-          rm -f .github/workflows/extract-project.yml
 
       - name: Commit extracted project
         shell: bash
