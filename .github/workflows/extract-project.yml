@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract project to repository root
+      - name: Extract all project files to repository root
         shell: bash
         run: |
           set -e
@@ -24,9 +24,17 @@ jobs:
           rm -rf /tmp/flutter-project
           mkdir -p /tmp/flutter-project
           unzip -q "$ZIP" -d /tmp/flutter-project
-          ROOT_DIR="$(find /tmp/flutter-project -mindepth 1 -maxdepth 1 -type d | head -n 1)"
-          test -n "$ROOT_DIR"
+
+          # Find the actual Flutter project root by locating pubspec.yaml.
+          PUBSPEC="$(find /tmp/flutter-project -type f -name pubspec.yaml | head -n 1)"
+          test -n "$PUBSPEC"
+          ROOT_DIR="$(dirname "$PUBSPEC")"
+          echo "Flutter project root: $ROOT_DIR"
+
+          # Put EVERYTHING inside the Flutter project root directly in this repo.
           cp -a "$ROOT_DIR"/. ./
+
+          # Remove the uploaded archive and this one-time extraction workflow.
           rm -f "$ZIP"
           rm -f .github/workflows/extract-project.yml
 
@@ -41,5 +49,5 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Extract Flutter project to repository root"
+          git commit -m "Extract Flutter project files to repository root"
           git push
