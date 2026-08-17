@@ -28,6 +28,7 @@ jobs:
           test -n "$ROOT_DIR"
           cp -a "$ROOT_DIR"/. ./
           rm -f "$ZIP"
+          rm -f .github/workflows/extract-project.yml
 
       - name: Commit extracted project
         shell: bash
@@ -40,5 +41,5 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Extract Flutter project"
+          git commit -m "Extract Flutter project to repository root"
           git push
