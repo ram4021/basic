@@ -1,2 +1,3 @@
-# basic 
-Computer 
+# basic
+
+Flutter computer basics app project.
